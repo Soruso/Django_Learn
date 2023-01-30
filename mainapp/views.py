@@ -13,7 +13,7 @@ class CoursesPageView(TemplateView):
     template_name = "mainapp/courses_list.html"
 
 
-class ContactPageView(TemplateView):
+class ContactsPageView(TemplateView):
     template_name = "mainapp/contacts.html"
 
 

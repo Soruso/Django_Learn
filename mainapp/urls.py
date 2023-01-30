@@ -11,5 +11,5 @@ urlpatterns = [
     path("courses/", views.CoursesPageView.as_view()),
     path("contacts/", views.ContactsPageView.as_view()),
     path("doc_site/", views.DocSitePageView.as_view()),
-    path("login/", views.LoginPageView.as_ciew()),
+    path("login/", views.LoginPageView.as_view()),
 ]
