@@ -70,7 +70,9 @@
 
     <div class="container-md">
 
-        
+    {% extends 'base.html' %}
+
+    {% block content %}
 
     <div id="carouselExampleIndicators" class="carousel slide carousel-fade" data-ride="carousel">
         <ol class="carousel-indicators">
@@ -191,7 +193,7 @@
             <img src="/static/img/promo003.jpg" alt="" class="w-100 h-100 rounded" style="opacity: 0.7;">
         </div>
     </div>
-
+    {% endblock content %}
 
     </div>
 
