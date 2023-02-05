@@ -2,6 +2,7 @@ from django.db import models
 
 
 class News(models.Model):
+    objects = None
     title = models.CharField(max_length=256, verbose_name="Title")
     preambule = models.CharField(max_length=1024, verbose_name="Preambule")
     body = models.TextField(blank=True, null=True, verbose_name="Body")
@@ -24,7 +25,14 @@ class News(models.Model):
         self.save()
 
 
+class CoursesManager(models.Manager):
+    def get_queryset(self):
+        return super().get_queryset().filter(deleted=False)
+
+
 class Courses(models.Model):
+    objects = CoursesManager()
+    
     name = models.CharField(max_length=256, verbose_name="Name")
     description = models.TextField(verbose_name="Description", blank=True, null=True)
     description_as_markdown = models.BooleanField(verbose_name="As markdown", default=False)
@@ -43,6 +51,7 @@ class Courses(models.Model):
 
 
 class Lesson(models.Model):
+    objects = None
     course = models.ForeignKey(Courses, on_delete=models.CASCADE)
     num = models.PositiveIntegerField(verbose_name="Lesson number")
     title = models.CharField(max_length=256, verbose_name="Name")
@@ -64,6 +73,7 @@ class Lesson(models.Model):
 
 
 class CourseTeachers(models.Model):
+    objects = None
     course = models.ManyToManyField(Courses)
     name_first = models.CharField(max_length=128, verbose_name="Name")
     name_second = models.CharField(max_length=128, verbose_name="Surname")
