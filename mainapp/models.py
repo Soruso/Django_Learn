@@ -67,7 +67,7 @@ class CourseTeachers(models.Model):
     course = models.ManyToManyField(Courses)
     name_first = models.CharField(max_length=128, verbose_name="Name")
     name_second = models.CharField(max_length=128, verbose_name="Surname")
-    day_birth = models.DecimalField(max_digits=256, decimal_places=256, verbose_name="Birth date")
+    day_birth = models.CharField(max_length=128, verbose_name="Birth date")
     deleted = models.BooleanField(default=False)
 
     def __str__(self) -> str:
