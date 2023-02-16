@@ -71,56 +71,39 @@
     <div class="container-md">
 
         
+{% extends 'base.html' %}
+
+{% block title %}
+Новости
+{% endblock title %}
+
+{% block content %}
+
+{% if page_num %}
+<div class="card my-2">
+  <div class="card-body">
+    <p class="card-text">Текущая страница: {{ page_num }}</p>
+  </div>
+</div>
+{% endif %}
 
 <div class="row">
 
   <div class="col-lg-8">
-    
+
+    {% for item in news_qs %}
     <div class="card my-2">
       <div class="card-body">
-        <h5 class="card-title">Новость</h5>
-        <h6 class="card-subtitle mb-2 text-muted">2021-04-29 20-50-26</h6>
-        <p class="card-text">Предварительное описание новости</p>
-        <a href="#" class="card-link">Подробнее</a>
+        <h5 class="card-title">{{ item.title }}</h5>
+        <h6 class="card-subtitle mb-2 text-muted">
+          {{ item.created|date:"Y-m-d h-i-s" }}
+        </h6>
+        <p class="card-text">{{ item.preambule }}</p>
+        <a href="{% url 'mainapp:news_detail' pk=item.pk %}" class="card-link">Подробнее</a>
       </div>
     </div>
-    
-    <div class="card my-2">
-      <div class="card-body">
-        <h5 class="card-title">Новость</h5>
-        <h6 class="card-subtitle mb-2 text-muted">2021-04-28 20-50-26</h6>
-        <p class="card-text">Предварительное описание новости</p>
-        <a href="#" class="card-link">Подробнее</a>
-      </div>
-    </div>
-    
-    <div class="card my-2">
-      <div class="card-body">
-        <h5 class="card-title">Новость</h5>
-        <h6 class="card-subtitle mb-2 text-muted">2021-04-27 20-50-26</h6>
-        <p class="card-text">Предварительное описание новости</p>
-        <a href="#" class="card-link">Подробнее</a>
-      </div>
-    </div>
-    
-    <div class="card my-2">
-      <div class="card-body">
-        <h5 class="card-title">Новость</h5>
-        <h6 class="card-subtitle mb-2 text-muted">2021-04-26 20-50-26</h6>
-        <p class="card-text">Предварительное описание новости</p>
-        <a href="#" class="card-link">Подробнее</a>
-      </div>
-    </div>
-    
-    <div class="card mt-2">
-      <div class="card-body">
-        <h5 class="card-title">Новость</h5>
-        <h6 class="card-subtitle mb-2 text-muted">2021-04-25 20-50-26</h6>
-        <p class="card-text">Предварительное описание новости</p>
-        <a href="#" class="card-link">Подробнее</a>
-      </div>
-    </div>
-    
+    {% endfor %}
+
   </div>
 
   <div class="col-lg-4">
@@ -157,13 +140,13 @@
       <li class="page-item"><a class="page-link" href="#">Previous</a></li>
       <li class="page-item"><a class="page-link" href="#">1</a></li>
       <li class="page-item"><a class="page-link" href="#">2</a></li>
-      <li class="page-item"><a class="page-link" href="#">3</a></li>
+      {# <li class="page-item"><a class="page-link" href="#">3</a></li> #}
       <li class="page-item"><a class="page-link" href="#">Next</a></li>
     </ul>
   </nav>
 </div>
 
-
+{% endblock content %}
 
     </div>
 
