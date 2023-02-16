@@ -32,7 +32,7 @@ class CoursesManager(models.Manager):
 
 class Courses(models.Model):
     objects = CoursesManager()
-    
+
     name = models.CharField(max_length=256, verbose_name="Name")
     description = models.TextField(verbose_name="Description", blank=True, null=True)
     description_as_markdown = models.BooleanField(verbose_name="As markdown", default=False)
