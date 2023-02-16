@@ -1,6 +1,7 @@
-from datetime import datetime
+# from datetime import datetime
 from django.shortcuts import get_object_or_404
 from django.views.generic import TemplateView
+
 import models as mainapp_models
 
 
@@ -20,7 +21,7 @@ class NewsPageView(TemplateView):
 class NewsPageDetailView(TemplateView):
     template_name = "mainapp/news_detail.html"
 
-    def get_context_data(self, **kwargs):
+    def get_context_data(self, pk=None, **kwargs):
         context = super().get_context_data(pk=pk, **kwargs)
         context["news_objects"] = get_object_or_404(mainapp_models.News, pk=pk)
         return context
@@ -40,7 +41,7 @@ class CoursesDetailView(TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super(CoursesDetailView, self).get_context_data(**kwargs)
-        context["course_object"] = get_object_or_404(mainapp_models.Courses, pk=pk)
+        context["course_object"] = get_object_or_404(mainapp_models.Courses, pk=None)
         context["lessons"] = mainapp_models.Lesson.objects.filter(course=context["course_object"])
         context["teachers"] = mainapp_models.CourseTeachers.objects.filter(course=context["course_object"])
         return context
