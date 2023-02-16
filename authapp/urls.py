@@ -1,7 +1,7 @@
 from django.urls import path
 
 from . import views
-from apps import AuthappConfig
+from .apps import AuthappConfig
 
 app_name = AuthappConfig.name
 
