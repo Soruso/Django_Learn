@@ -1,20 +1,14 @@
 from django.db import models
+from django.utils.translation import gettext_lazy as _
 
 
 class News(models.Model):
-    objects = None
     title = models.CharField(max_length=256, verbose_name="Title")
     preambule = models.CharField(max_length=1024, verbose_name="Preambule")
     body = models.TextField(blank=True, null=True, verbose_name="Body")
-    body_as_markdown = models.BooleanField(
-        default=False, verbose_name="As markdown"
-    )
-    created = models.DateTimeField(
-        auto_now_add=True, verbose_name="Created", editable=False
-    )
-    updated = models.DateTimeField(
-        auto_now=True, verbose_name="Edited", editable=False
-    )
+    body_as_markdown = models.BooleanField(default=False, verbose_name="As markdown")
+    created = models.DateTimeField(auto_now_add=True, verbose_name="Created", editable=False)
+    updated = models.DateTimeField(auto_now=True, verbose_name="Edited", editable=False)
     deleted = models.BooleanField(default=False)
 
     def __str__(self) -> str:
@@ -23,6 +17,11 @@ class News(models.Model):
     def delete(self, *args):
         self.deleted = True
         self.save()
+
+    class Meta:
+        verbose_name = _("News")
+        verbose_name_plural = _("News")
+        ordering = ("-created",)
 
 
 class CoursesManager(models.Manager):
@@ -51,7 +50,6 @@ class Courses(models.Model):
 
 
 class Lesson(models.Model):
-    objects = None
     course = models.ForeignKey(Courses, on_delete=models.CASCADE)
     num = models.PositiveIntegerField(verbose_name="Lesson number")
     title = models.CharField(max_length=256, verbose_name="Name")
@@ -70,14 +68,15 @@ class Lesson(models.Model):
 
     class Meta:
         ordering = ("course", "num")
+        verbose_name = _("Lesson")
+        verbose_name_plural = _("Lessons")
 
 
 class CourseTeachers(models.Model):
-    objects = None
     course = models.ManyToManyField(Courses)
     name_first = models.CharField(max_length=128, verbose_name="Name")
     name_second = models.CharField(max_length=128, verbose_name="Surname")
-    day_birth = models.CharField(max_length=128, verbose_name="Birth date")
+    day_birth = models.DateField(verbose_name="Birth date")
     deleted = models.BooleanField(default=False)
 
     def __str__(self) -> str:
@@ -86,3 +85,7 @@ class CourseTeachers(models.Model):
     def delete(self, *args):
         self.deleted = True
         self.save()
+
+    class Meta:
+        verbose_name = _("Teacher")
+        verbose_name_plural = _("Teachers")
