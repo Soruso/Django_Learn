@@ -1,7 +1,7 @@
 from django.contrib import admin
 from django.urls import path, include
 from rest_framework.routers import DefaultRouter
-from authors.views import AuthorModelViewSet
+from library.authors import AuthorModelViewSet
 
 router = DefaultRouter()
 router.registry('authors', AuthorModelViewSet)
