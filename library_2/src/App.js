@@ -1,10 +1,13 @@
-import React from "react"
-import AuthorList from "./components/Author"
-import BookList from "./components/Books"
-import {HashRouter, Link, Route, Switch, Redirect, BrowserRouter} from 'react-router-dom'
-import AuthorBook from "./components/AuthorBook";
-import * as PropTypes from "prop-types";
-import Author from "./components/Author";
+import React from 'react'
+import AuthorList from './components/Author.js'
+import BookList from './components/Books.js'
+import AuthorBookList from './components/AuthorBook.js'
+import {BrowserRouter, Route, Switch, Redirect, Link} from 'react-router-dom'
+import axios from 'axios'
+import LoginForm from "./components/Auth";
+import Cookies from 'universal-cookie';
+
+
 
 
 const NotFound404 = ({ location }) => {
@@ -20,19 +23,69 @@ class App extends React.Component{
 
   constructor(props) {
     super(props);
-    const author1 = {id: 1, name: 'Грин', birhday_year: 1880}
-    const author2 = {id: 2, name: 'Пушкин', birhday_year: 1799}
-    const authors = [author1, author2]
-    const book1 = {id: 1, name: 'Алые паруса', author: author1}
-    const book2 = {id: 2, name: 'Золотая цепь', author: author1}
-    const book3 = {id: 3, name: 'Пиковая дама', author: author2}
-    const book4 = {id: 4, name: 'Руслан и Людмила', author: author2}
-    const books = [book1, book2, book3, book4]
     this.state = {
-      'authors': authors,
-      'books': books
+      'authors': [],
+      'books': [],
+      'token': ''
     }
   }
+
+  set_token(token) {
+    const cookies = new Cookies()
+    cookies.set('token', token)
+    this.setState({'token': token})
+  }
+
+  is_authenticated() {
+    return this.state.token !== ''
+  }
+
+  logout() {
+    this.set_token('')
+  }
+
+  get_token_from_storage() {
+    const cookies = new Cookies()
+    const token = cookies.get('token')
+    this.setState({'token': token})
+  }
+
+  get_token(username, password) {
+    axios.post('http://127.0.0.1:8000/api-token-auth/', {username: username, password: password})
+        .then(response => {
+          this.set_token(response.data['token'])
+        }).catch(error => alert('Неверный логин или пароль'))
+  }
+
+  get_headers() {
+    let headers = {
+      'Content-Type': 'application/json'
+    }
+  if (this.is_authenticated())
+    {
+      headers['Authorization'] = 'Token ' + this.state.token
+    }
+  return headers
+  }
+
+  load_data() {
+
+    const headers = this.get_headers()
+    axios.get('http://127.0.0.1:8000/api/authors/', {headers})
+        .then(response => {
+          this.setState({authors: response.data})
+        }).catch(error => console.log(error))
+
+    axios.get('http://127.0.0.1:8000/api/books/', {headers})
+        .then(response => {
+          this.setState({books: response.data})
+        }).catch(error => console.log(error))
+  }
+
+  componentDidMount() {
+    this.get_token_from_storage()
+  }
+
   render() {
     return (
         <div className="App">
@@ -45,13 +98,17 @@ class App extends React.Component{
                 <li>
                   <Link to='/books'>Books</Link>
                 </li>
+                <li>
+                  <Link to='/login'>Login</Link>
+                </li>
               </ul>
             </nav>
               <Switch>
                 <Route exact path='/' component={() => <AuthorList items={this.state.authors} />} />
                 <Route exact path='/books' component={() => <BookList items={this.state.books} />} />
+                <Route exact path='/login' component={() => <LoginForm get_token={(username, password) => this.get_token(username, password)}/>} />
                 <Route path="/author/:id">
-                  <AuthorBook items={this.state.books} />
+                  <AuthorBookList items={this.state.books} />
                 </Route>
                 <Redirect from='/authors' to='/' />
                 <Route component={NotFound404} />
