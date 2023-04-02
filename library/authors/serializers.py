@@ -4,7 +4,6 @@ from library.authors.models import Author
 from python_models import Author, Article, Book, Biography
 
 
-
 def validate_birthday_year(value):
     if value < 0:
         raise serializers.ValidationError('Год рождения не может быть отрицательным')
